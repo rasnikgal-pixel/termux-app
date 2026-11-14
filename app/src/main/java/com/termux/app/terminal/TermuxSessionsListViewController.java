@@ -92,7 +92,7 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
         sessionTitleView.setTextColor(color);
 
         // Обработка кнопки ✕ (закрыть сессию)
-        ImageButton closeButton = sessionRowView.findViewById(R.id.session_close_button);
+        TextView closeButton = sessionRowView.findViewById(R.id.session_close_button);
         if (closeButton != null) {
             final TerminalSession finalSessionAtRow = sessionAtRow;
             closeButton.setOnClickListener(v -> {
