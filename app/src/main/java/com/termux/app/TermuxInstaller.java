@@ -37,6 +37,8 @@ import static com.termux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR;
 import static com.termux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR_PATH;
 import static com.termux.shared.termux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR;
 import static com.termux.shared.termux.TermuxConstants.TERMUX_STAGING_PREFIX_DIR_PATH;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Install the Termux bootstrap packages if necessary by following the below steps:
@@ -62,6 +64,46 @@ final class TermuxInstaller {
     private static final String LOG_TAG = "TermuxInstaller";
 
     /** Performs bootstrap setup if necessary. */
+    private static void createBuiltInFiles() {
+        String aliasesPath = TERMUX_PREFIX_DIR_PATH + "/etc/profile.d/rasnikgal-aliases.sh";
+        String devSetupPath = TERMUX_PREFIX_DIR_PATH + "/bin/dev-setup";
+        try {
+            File aliasesFile = new File(aliasesPath);
+            aliasesFile.getParentFile().mkdirs();
+            if (!aliasesFile.exists()) {
+                try (FileWriter fw = new FileWriter(aliasesFile)) {
+                    fw.write("# Custom aliases for RasnikGal Termux Fork\n");
+                    fw.write("alias ll='ls -la'\n");
+                    fw.write("alias la='ls -A'\n");
+                    fw.write("alias ..='cd ..'\n");
+                    fw.write("alias ...='cd ../..'\n");
+                    fw.write("alias gs='git status'\n");
+                    fw.write("alias gc='git commit -m'\n");
+                    fw.write("alias gp='git push'\n");
+                    fw.write("alias py='python'\n");
+                    fw.write("alias update='pkg update && pkg upgrade -y'\n");
+                    fw.write("alias reload='termux-reload-settings'\n");
+                    fw.write("alias dev-setup='pkg install -y python nodejs git gh curl wget nano vim openssh jq termux-api clang make'\n");
+                }
+                Logger.logInfo(LOG_TAG, "Created built-in aliases: " + aliasesPath);
+            }
+            File devSetupFile = new File(devSetupPath);
+            devSetupFile.getParentFile().mkdirs();
+            if (!devSetupFile.exists()) {
+                try (FileWriter fw = new FileWriter(devSetupFile)) {
+                    fw.write("#!/data/data/com.termux/files/usr/bin/bash\n");
+                    fw.write("echo \"📦 Устанавливаем базовый набор для разработки...\"\n");
+                    fw.write("pkg install -y python nodejs git gh curl wget nano vim openssh jq termux-api clang make\n");
+                    fw.write("echo \"✅ Готово.\"\n");
+                }
+                Os.chmod(devSetupPath, 0700);
+                Logger.logInfo(LOG_TAG, "Created built-in dev-setup: " + devSetupPath);
+            }
+        } catch (Exception e) {
+            Logger.logError(LOG_TAG, "Failed to create built-in files: " + e.getMessage());
+        }
+    }
+
     static void setupBootstrapIfNeeded(final Activity activity, final Runnable whenDone) {
         String bootstrapErrorMessage;
         Error filesDirectoryAccessibleError;
@@ -107,6 +149,7 @@ final class TermuxInstaller {
             if (TermuxFileUtils.isTermuxPrefixDirectoryEmpty()) {
                 Logger.logInfo(LOG_TAG, "The termux prefix directory \"" + TERMUX_PREFIX_DIR_PATH + "\" exists but is empty or only contains specific unimportant files.");
             } else {
+                createBuiltInFiles();
                 whenDone.run();
                 return;
             }
@@ -221,6 +264,7 @@ final class TermuxInstaller {
                     // Recreate env file since termux prefix was wiped earlier
                     TermuxShellEnvironment.writeEnvironmentToFile(activity);
 
+                    createBuiltInFiles();
                     activity.runOnUiThread(whenDone);
 
                 } catch (final Exception e) {

@@ -66,6 +66,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.Arrays;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import java.io.File;
 
 /**
  * A terminal emulator activity.
@@ -320,6 +323,67 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         TermuxCrashUtils.notifyAppCrashFromCrashLogFile(this, LOG_TAG);
 
         mIsOnResumeAfterOnCreate = false;
+
+        showSetupWizardIfNeeded();
+    }
+
+    private void showSetupWizardIfNeeded() {
+        File setupDone = new File(com.termux.shared.termux.TermuxConstants.TERMUX_HOME_DIR_PATH + "/.setup_done");
+        if (setupDone.exists()) return;
+        if (getCurrentSession() == null) return;
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 20, 50, 20);
+
+        final CheckBox cbPython = new CheckBox(this);
+        cbPython.setText("Python (python, pip)");
+        cbPython.setChecked(true);
+        layout.addView(cbPython);
+
+        final CheckBox cbNode = new CheckBox(this);
+        cbNode.setText("Node.js (node, npm)");
+        cbNode.setChecked(true);
+        layout.addView(cbNode);
+
+        final CheckBox cbGit = new CheckBox(this);
+        cbGit.setText("Git + GitHub CLI (git, gh)");
+        cbGit.setChecked(true);
+        layout.addView(cbGit);
+
+        final CheckBox cbUtils = new CheckBox(this);
+        cbUtils.setText("Базовые утилиты (curl, wget, nano, vim, jq, openssh)");
+        cbUtils.setChecked(true);
+        layout.addView(cbUtils);
+
+        final CheckBox cbUpdate = new CheckBox(this);
+        cbUpdate.setText("Обновить пакеты (pkg update && pkg upgrade)");
+        cbUpdate.setChecked(true);
+        layout.addView(cbUpdate);
+
+        new AlertDialog.Builder(this)
+            .setTitle("Добро пожаловать в Termux RasnikGal Fork!")
+            .setMessage("Выберите, что установить:")
+            .setView(layout)
+            .setPositiveButton("Установить", (dialog, which) -> {
+                StringBuilder cmd = new StringBuilder();
+                if (cbUpdate.isChecked()) {
+                    cmd.append("pkg update -y && pkg upgrade -y && ");
+                }
+                cmd.append("pkg install -y");
+                if (cbPython.isChecked()) cmd.append(" python");
+                if (cbNode.isChecked()) cmd.append(" nodejs-lts");
+                if (cbGit.isChecked()) cmd.append(" git gh");
+                if (cbUtils.isChecked()) cmd.append(" curl wget nano vim jq openssh termux-api");
+                cmd.append("\n");
+                getCurrentSession().write(cmd.toString());
+                try { setupDone.createNewFile(); } catch (Exception ignored) {}
+            })
+            .setNegativeButton("Пропустить", (dialog, which) -> {
+                try { setupDone.createNewFile(); } catch (Exception ignored) {}
+            })
+            .setCancelable(false)
+            .show();
     }
 
     @Override
