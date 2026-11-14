@@ -96,12 +96,12 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
                 drawerLayout.closeDrawer(Gravity.LEFT);
             else
                 drawerLayout.openDrawer(Gravity.LEFT);
-        } else if ("MENU".equals(key)) {
+        } else if ("MENU".equals(key) || "Mnu".equals(key)) {
             mActivity.showCommandPalette();
-        } else if ("PASTE".equals(key)) {
+        } else if ("PASTE".equals(key) || "Pst".equals(key)) {
             if(mTermuxTerminalSessionActivityClient != null)
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
-        } else if ("COPY_ALL".equals(key)) {
+        } else if ("COPY_ALL".equals(key) || "Cp_All".equals(key)) {
             TerminalView terminalView = mTermuxTerminalViewClient.getActivity().getTerminalView();
             if (terminalView != null && terminalView.mEmulator != null) {
                 String allText = terminalView.mEmulator.getScreen().getTranscriptText();
@@ -110,7 +110,7 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
                 clipboard.setPrimaryClip(clip);
                 Logger.showToast(mActivity, "Скопировано всё (" + allText.length() + " символов)", true);
             }
-        } else if ("CLEAR_AND_PASTE".equals(key)) {
+        } else if ("CLEAR_AND_PASTE".equals(key) || "Pst_Clr".equals(key)) {
             if (mTermuxTerminalSessionActivityClient != null) {
                 mActivity.getCurrentSession().write("clear\n");
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);

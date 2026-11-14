@@ -152,6 +152,68 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
         return false;
     }
 
+    public void updateExtraKeys() {
+        // Читаем текущие настройки тумблеров (по умолчанию true)
+        boolean showPaste = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_paste_key", true);
+        boolean showCopy = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_copy_all_key", true);
+        boolean showClearPaste = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_clear_paste_key", true);
+
+        // Формируем первую строку
+        StringBuilder row1 = new StringBuilder("[");
+        row1.append("'ESC','CTRL','ALT','UP','LEFT','DOWN','RIGHT'");
+        if (showPaste) row1.append(",'Pst'");
+        row1.append(",'Mnu']");
+
+        // Формируем вторую строку
+        StringBuilder row2 = new StringBuilder("[");
+        boolean first = true;
+        if (showCopy) { row2.append("'Cp_All'"); first = false; }
+        if (showClearPaste) { if (!first) row2.append(","); row2.append("'Pst_Clr'"); first = false; }
+        if (!first) row2.append(",");
+        row2.append("'TAB','HOME','END','PGUP','PGDN']");
+
+        String extraKeys = "[" + row1.toString() + ", " + row2.toString() + "]";
+
+        // Записываем в termux.properties
+        String path = TermuxConstants.TERMUX_PROPERTIES_PRIMARY_FILE_PATH;
+        StringBuilder sb = new StringBuilder();
+        Error error = FileUtils.readTextFromFile(null, path, null, sb, true);
+        if (error != null) return;
+        String propContent = sb.toString();
+        String regex = "(?m)^\\s*#?\\s*extra-keys\\s*=.*$";
+        String replacement = "extra-keys = " + extraKeys;
+        if (propContent.matches("(?s).*" + regex + ".*")) {
+            propContent = propContent.replaceAll(regex, replacement);
+        } else {
+            if (!propContent.endsWith("\n")) propContent += "\n";
+            propContent += replacement + "\n";
+        }
+        FileUtils.writeTextToFile(null, path, null, propContent, false);
+    }
+
+    public void setShowPasteKey(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_paste_key", value, false);
+        updateExtraKeys();
+    }
+    public void setShowCopyAllKey(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_copy_all_key", value, false);
+        updateExtraKeys();
+    }
+    public void setShowClearPasteKey(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_clear_paste_key", value, false);
+        updateExtraKeys();
+    }
+
+    public boolean isShowPasteKey() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_paste_key", true);
+    }
+    public boolean isShowCopyAllKey() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_copy_all_key", true);
+    }
+    public boolean isShowClearPasteKey() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_clear_paste_key", true);
+    }
+
     public boolean shouldKeepScreenOn() {
         return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_SCREEN_ON, TERMUX_APP.DEFAULT_VALUE_KEEP_SCREEN_ON);
     }

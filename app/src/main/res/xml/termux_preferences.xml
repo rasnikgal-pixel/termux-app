@@ -22,4 +22,18 @@
         app:summary="Выключи, чтобы кнопки громкости регулировали звук"
         app:defaultValue="true" />
 
+
+    <SwitchPreference
+        app:key="show_paste_key"
+        app:title="Показывать кнопку «Вставить» (Pst)"
+        app:defaultValue="true" />
+    <SwitchPreference
+        app:key="show_copy_all_key"
+        app:title="Показывать кнопку «Копировать всё» (Cp_All)"
+        app:defaultValue="true" />
+    <SwitchPreference
+        app:key="show_clear_paste_key"
+        app:title="Показывать кнопку «Очистить и вставить» (Pst_Clr)"
+        app:defaultValue="true" />
+
 </PreferenceScreen>

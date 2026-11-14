@@ -72,6 +72,15 @@ class TermuxPreferencesDataStore extends PreferenceDataStore {
             case "volume_keys_behaviour":
                 mPreferences.setVirtualVolumeKeysDisabled(!value);
                 break;
+            case "show_paste_key":
+                mPreferences.setShowPasteKey(value);
+                break;
+            case "show_copy_all_key":
+                mPreferences.setShowCopyAllKey(value);
+                break;
+            case "show_clear_paste_key":
+                mPreferences.setShowClearPasteKey(value);
+                break;
             default:
                 break;
         }
@@ -83,6 +92,12 @@ class TermuxPreferencesDataStore extends PreferenceDataStore {
         switch (key) {
             case "volume_keys_behaviour":
                 return !mPreferences.areVirtualVolumeKeysDisabled();
+            case "show_paste_key":
+                return mPreferences.isShowPasteKey();
+            case "show_copy_all_key":
+                return mPreferences.isShowCopyAllKey();
+            case "show_clear_paste_key":
+                return mPreferences.isShowClearPasteKey();
             default:
                 return false;
         }
