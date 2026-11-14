@@ -136,6 +136,11 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
     }
 
     @Override
+    public void onAllSessionsExited() {
+        if (mActivity != null)
+            mActivity.finishActivityIfNotFinishing();
+    }
+
     public void onSessionFinished(@NonNull TerminalSession finishedSession) {
         TermuxService service = mActivity.getTermuxService();
 

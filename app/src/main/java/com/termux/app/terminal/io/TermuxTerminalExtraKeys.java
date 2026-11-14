@@ -99,8 +99,14 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
         } else if ("MENU".equals(key) || "Mnu".equals(key)) {
             mActivity.showCommandPalette();
         } else if ("PASTE".equals(key) || "Pst".equals(key)) {
-            if(mTermuxTerminalSessionActivityClient != null)
+            if (mTermuxTerminalSessionActivityClient != null) {
+                // Сначала отправляем Enter, чтобы перейти на новую строку
+                if (mActivity.getCurrentSession() != null) {
+                    mActivity.getCurrentSession().write("\n");
+                }
+                // Затем вставляем текст
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
+            }
         } else if ("COPY_ALL".equals(key) || "Cp_All".equals(key)) {
             TerminalView terminalView = mTermuxTerminalViewClient.getActivity().getTerminalView();
             if (terminalView != null && terminalView.mEmulator != null) {

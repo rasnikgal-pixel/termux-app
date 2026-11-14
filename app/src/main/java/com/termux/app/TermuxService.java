@@ -655,6 +655,12 @@ public final class TermuxService extends Service implements AppShell.AppShellCli
                 mTermuxTerminalSessionActivityClient.termuxSessionListNotifyUpdated();
         }
 
+        // Если не осталось сессий — закрываем приложение
+        if (mShellManager.mTermuxSessions.isEmpty()) {
+            if (mTermuxTerminalSessionActivityClient != null)
+                mTermuxTerminalSessionActivityClient.onAllSessionsExited();
+        }
+
         updateNotification();
     }
 

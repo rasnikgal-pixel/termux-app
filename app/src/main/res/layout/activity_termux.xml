@@ -90,6 +90,14 @@
                         android:layout_weight="1"
                         android:text="@string/action_new_session" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/close_all_sessions_button"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Закрыть все сессии" />
             </LinearLayout>
 
         </androidx.drawerlayout.widget.DrawerLayout>

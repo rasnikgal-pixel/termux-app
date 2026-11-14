@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -89,6 +90,18 @@ public class TermuxSessionsListViewController extends ArrayAdapter<TermuxSession
         int defaultColor = shouldEnableDarkTheme ? Color.WHITE : Color.BLACK;
         int color = sessionRunning || sessionAtRow.getExitStatus() == 0 ? defaultColor : Color.RED;
         sessionTitleView.setTextColor(color);
+
+        // Обработка кнопки ✕ (закрыть сессию)
+        ImageButton closeButton = sessionRowView.findViewById(R.id.session_close_button);
+        if (closeButton != null) {
+            final TerminalSession finalSessionAtRow = sessionAtRow;
+            closeButton.setOnClickListener(v -> {
+                if (finalSessionAtRow != null) {
+                    finalSessionAtRow.finishIfRunning();
+                }
+            });
+        }
+
         return sessionRowView;
     }
 

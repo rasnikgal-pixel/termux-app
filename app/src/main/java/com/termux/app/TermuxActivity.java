@@ -252,6 +252,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setSettingsButtonView();
 
         setNewSessionButtonView();
+        setCloseAllSessionsButtonView();
 
         setToggleKeyboardView();
 
@@ -724,6 +725,26 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         findViewById(R.id.toggle_keyboard_button).setOnLongClickListener(v -> {
             toggleTerminalToolbar();
             return true;
+        });
+    }
+
+    private void setCloseAllSessionsButtonView() {
+        View closeAllButton = findViewById(R.id.close_all_sessions_button);
+        if (closeAllButton == null) return;
+
+        closeAllButton.setOnClickListener(v -> {
+            if (mTermuxTerminalSessionActivityClient != null) {
+                TermuxService service = mTermuxService;
+                if (service != null) {
+                    for (int i = service.getTermuxSessionsSize() - 1; i >= 0; i--) {
+                        TermuxSession session = service.getTermuxSession(i);
+                        if (session != null && session.getTerminalSession() != null) {
+                            session.getTerminalSession().finishIfRunning();
+                        }
+                    }
+                }
+            }
+            getDrawer().closeDrawers();
         });
     }
 
