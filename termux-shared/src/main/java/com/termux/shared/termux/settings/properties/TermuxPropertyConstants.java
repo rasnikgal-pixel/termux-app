@@ -325,8 +325,8 @@ public final class TermuxPropertyConstants {
 
     /** Defines the key for extra keys */
     public static final String KEY_EXTRA_KEYS =  "extra-keys"; // Default: "extra-keys"
-    //public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[[ESC, TAB, CTRL, ALT, {key: '-', popup: '|'}, DOWN, UP]]"; // Single row
-    public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[['ESC','CTRL','ALT','UP','LEFT','DOWN','RIGHT','Pst','Mnu'], ['Cp_All','Pst_Clr','TAB','HOME','END','PGUP','PGDN']]"; // Custom short names: Pst, Cp_All, Pst_Clr, Mnu
+    //public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[['ESC','CTRL','ALT','Mnu','Pst'], ['Cp_All','Pst_Clr','UP','DOWN','PGUP','PGDN']]"; // Single row
+    public static final String DEFAULT_IVALUE_EXTRA_KEYS = "[['ESC','CTRL','ALT','Mnu'], ['Cp_All','Pst_Clr','Pst','UP','DOWN','PGUP','PGDN']]"; // Custom: PST in row 2
 
     /** Defines the key for extra keys style */
     public static final String KEY_EXTRA_KEYS_STYLE =  "extra-keys-style"; // Default: "extra-keys-style"

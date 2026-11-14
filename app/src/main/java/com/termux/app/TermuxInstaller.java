@@ -72,7 +72,7 @@ final class TermuxInstaller {
             aliasesFile.getParentFile().mkdirs();
             if (!aliasesFile.exists()) {
                 try (FileWriter fw = new FileWriter(aliasesFile)) {
-                    fw.write("# Custom aliases for RasnikGal Termux Fork\n");
+                    fw.write("# Custom aliases for RasNikGal Termux Fork\n");
                     fw.write("alias ll='ls -la'\n");
                     fw.write("alias la='ls -A'\n");
                     fw.write("alias ..='cd ..'\n");

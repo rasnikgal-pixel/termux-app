@@ -215,6 +215,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         setActivityTheme();
 
         super.onCreate(savedInstanceState);
+        forceUpdateMotd();
 
         setContentView(R.layout.activity_termux);
 
@@ -327,6 +328,41 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         showSetupWizardIfNeeded();
     }
 
+    private void forceUpdateMotd() {
+        try {
+            String motdPath = com.termux.shared.termux.TermuxConstants.TERMUX_PREFIX_DIR_PATH + "/etc/motd";
+            File motdFile = new File(motdPath);
+            motdFile.getParentFile().mkdirs();
+            try (java.io.FileWriter fw = new java.io.FileWriter(motdFile)) {
+                fw.write("╔══════════════════════════════════════════════════════════════╗\n");
+                fw.write("║                 Termux RasNikGal Fork v1.0                   ║\n");
+                fw.write("║            Кастомная сборка с улучшениями и фишками          ║\n");
+                fw.write("╠══════════════════════════════════════════════════════════════╣\n");
+                fw.write("║ 🚀 Быстрый старт:                                            ║\n");
+                fw.write("║   dev-setup      — установить Python, Node.js, Git и утилиты ║\n");
+                fw.write("║   update         — обновить все пакеты                       ║\n");
+                fw.write("║   reload         — перечитать настройки Termux               ║\n");
+                fw.write("║                                                              ║\n");
+                fw.write("║ 🛠 Полезные команды:                                         ║\n");
+                fw.write("║   ll             — список файлов (ls -la)                    ║\n");
+                fw.write("║   gs             — git status                                ║\n");
+                fw.write("║   gc \"msg\"       — git commit -m                             ║\n");
+                fw.write("║   gp             — git push                                  ║\n");
+                fw.write("║   micro file     — открыть файл в редакторе Micro            ║\n");
+                fw.write("║                                                              ║\n");
+                fw.write("║ 📦 Установка пакетов:                                        ║\n");
+                fw.write("║   pkg install <name>                                         ║\n");
+                fw.write("║   pkg search <name>                                          ║\n");
+                fw.write("║                                                              ║\n");
+                fw.write("║ 🔗 Ссылка на проект:                                         ║\n");
+                fw.write("║   https://github.com/rasnikgal-pixel/termux-app              ║\n");
+                fw.write("╚══════════════════════════════════════════════════════════════╝\n");
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+    }
+
     private void showSetupWizardIfNeeded() {
         File setupDone = new File(com.termux.shared.termux.TermuxConstants.TERMUX_HOME_DIR_PATH + "/.setup_done");
         if (setupDone.exists()) return;
@@ -362,7 +398,7 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
         layout.addView(cbUpdate);
 
         new AlertDialog.Builder(this)
-            .setTitle("Добро пожаловать в Termux RasnikGal Fork!")
+            .setTitle("Добро пожаловать в Termux RasNikGal Fork!")
             .setMessage("Выберите, что установить:")
             .setView(layout)
             .setPositiveButton("Установить", (dialog, which) -> {
