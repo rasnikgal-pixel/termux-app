@@ -10,6 +10,8 @@ import androidx.preference.PreferenceManager;
 
 import com.termux.R;
 import com.termux.shared.termux.settings.preferences.TermuxAppSharedPreferences;
+import android.app.AlertDialog;
+import androidx.preference.SwitchPreference;
 
 @Keep
 public class TermuxPreferencesFragment extends PreferenceFragmentCompat {
@@ -23,6 +25,29 @@ public class TermuxPreferencesFragment extends PreferenceFragmentCompat {
         preferenceManager.setPreferenceDataStore(TermuxPreferencesDataStore.getInstance(context));
 
         setPreferencesFromResource(R.xml.termux_preferences, rootKey);
+
+        // Диалог перезагрузки для volume_keys_behaviour
+        SwitchPreference volumePref = findPreference("volume_keys_behaviour");
+        if (volumePref != null) {
+            volumePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                Context ctx = getContext();
+                if (ctx != null) {
+                    new AlertDialog.Builder(ctx)
+                        .setTitle("Применить настройки?")
+                        .setMessage("Изменения вступят в силу после перезагрузки конфигурации Termux. Перезагрузить сейчас?")
+                        .setPositiveButton("Перезагрузить", (d, w) -> {
+                            try {
+                                Runtime.getRuntime().exec(new String[]{"sh", "-c", "termux-reload-settings"});
+                            } catch (Exception e) {
+                                // ignore
+                            }
+                        })
+                        .setNegativeButton("Позже", null)
+                        .show();
+                }
+                return true;
+            });
+        }
     }
 
 }
