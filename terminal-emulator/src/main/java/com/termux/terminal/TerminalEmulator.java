@@ -3541,14 +3541,22 @@ public final class TerminalEmulator {
     public void paste(String text) {
         // First: Always remove escape key and C1 control characters [0x80,0x9F]:
         text = text.replaceAll("(\u001B|[\u0080-\u009F])", "");
-        // Second: Replace all newlines (\n) or CRLF (\r\n) with carriage returns (\r).
-        text = text.replaceAll("\r?\n", "\r");
 
-        // Then: Implement bracketed paste mode if enabled:
+        // Second: Check if bracketed paste mode is enabled.
         boolean bracketed = isDecsetInternalBitSet(DECSET_BIT_BRACKETED_PASTE_MODE);
-        if (bracketed) mSession.write("\033[200~");
-        mSession.write(text);
-        if (bracketed) mSession.write("\033[201~");
+
+        if (bracketed) {
+            // Bracketed paste supported: keep \r so the app can distinguish paste from Enter.
+            text = text.replaceAll("\r?\n", "\r");
+            mSession.write("\033[200~");
+            mSession.write(text);
+            mSession.write("\033[201~");
+        } else {
+            // No bracketed paste: convert line breaks to \n so they don't auto-execute.
+            text = text.replaceAll("\r?\n", "\n");
+            text = text.replace('\r', '\n');
+            mSession.write(text);
+        }
     }
 
     /** http://www.vt100.net/docs/vt510-rm/DECSC */
