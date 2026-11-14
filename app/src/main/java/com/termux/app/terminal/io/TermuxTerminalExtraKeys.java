@@ -110,7 +110,7 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
             }
         } else if ("CLEAR_AND_PASTE".equals(key)) {
             if (mTermuxTerminalSessionActivityClient != null) {
-                mTermuxTerminalSessionActivityClient.getCurrentSession().write("clear\n");
+                mActivity.getCurrentSession().write("clear\n");
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
             }
         }  else if ("SCROLL".equals(key)) {
