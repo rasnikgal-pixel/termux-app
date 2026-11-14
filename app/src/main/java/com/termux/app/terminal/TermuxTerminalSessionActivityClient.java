@@ -135,7 +135,6 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
         termuxSessionListNotifyUpdated();
     }
 
-    @Override
     public void onAllSessionsExited() {
         if (mActivity != null)
             mActivity.finishActivityIfNotFinishing();

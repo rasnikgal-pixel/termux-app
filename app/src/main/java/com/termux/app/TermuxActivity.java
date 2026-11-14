@@ -58,6 +58,7 @@ import com.termux.terminal.TerminalSession;
 import com.termux.terminal.TerminalSessionClient;
 import com.termux.view.TerminalView;
 import com.termux.view.TerminalViewClient;
+import com.termux.shared.termux.shell.command.runner.terminal.TermuxSession;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
