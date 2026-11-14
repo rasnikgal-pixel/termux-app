@@ -334,29 +334,30 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             File motdFile = new File(motdPath);
             motdFile.getParentFile().mkdirs();
             try (java.io.FileWriter fw = new java.io.FileWriter(motdFile)) {
-                fw.write("╔══════════════════════════════════════════════════════════════╗\n");
-                fw.write("║                 Termux RasNikGal Fork v1.0                   ║\n");
-                fw.write("║            Кастомная сборка с улучшениями и фишками          ║\n");
-                fw.write("╠══════════════════════════════════════════════════════════════╣\n");
-                fw.write("║ 🚀 Быстрый старт:                                            ║\n");
-                fw.write("║   dev-setup      — установить Python, Node.js, Git и утилиты ║\n");
-                fw.write("║   update         — обновить все пакеты                       ║\n");
-                fw.write("║   reload         — перечитать настройки Termux               ║\n");
-                fw.write("║                                                              ║\n");
-                fw.write("║ 🛠 Полезные команды:                                         ║\n");
-                fw.write("║   ll             — список файлов (ls -la)                    ║\n");
-                fw.write("║   gs             — git status                                ║\n");
-                fw.write("║   gc \"msg\"       — git commit -m                             ║\n");
-                fw.write("║   gp             — git push                                  ║\n");
-                fw.write("║   micro file     — открыть файл в редакторе Micro            ║\n");
-                fw.write("║                                                              ║\n");
-                fw.write("║ 📦 Установка пакетов:                                        ║\n");
-                fw.write("║   pkg install <name>                                         ║\n");
-                fw.write("║   pkg search <name>                                          ║\n");
-                fw.write("║                                                              ║\n");
-                fw.write("║ 🔗 Ссылка на проект:                                         ║\n");
-                fw.write("║   https://github.com/rasnikgal-pixel/termux-app              ║\n");
-                fw.write("╚══════════════════════════════════════════════════════════════╝\n");
+                fw.write("=========================================================\n");
+                fw.write("           Termux RasNikGal Fork v1.0\n");
+                fw.write("      Кастомная сборка с улучшениями и фишками\n");
+                fw.write("=========================================================\n");
+                fw.write("\n");
+                fw.write("🚀 Быстрый старт:\n");
+                fw.write("  dev-setup      — установить Python, Node.js, Git\n");
+                fw.write("  update         — обновить все пакеты\n");
+                fw.write("  reload         — перечитать настройки Termux\n");
+                fw.write("\n");
+                fw.write("🛠 Полезные команды:\n");
+                fw.write("  ll             — список файлов (ls -la)\n");
+                fw.write("  gs             — git status\n");
+                fw.write("  gc \"msg\"       — git commit -m\n");
+                fw.write("  gp             — git push\n");
+                fw.write("  micro file     — открыть файл в редакторе Micro\n");
+                fw.write("\n");
+                fw.write("📦 Установка пакетов:\n");
+                fw.write("  pkg install <name>\n");
+                fw.write("  pkg search <name>\n");
+                fw.write("\n");
+                fw.write("🔗 Ссылка на проект:\n");
+                fw.write("  https://github.com/rasnikgal-pixel/termux-app\n");
+                fw.write("=========================================================\n");
             }
         } catch (Exception e) {
             // ignore

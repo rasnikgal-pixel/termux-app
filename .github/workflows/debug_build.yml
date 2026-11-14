@@ -90,10 +90,14 @@ jobs:
         shell: bash {0}
         run: |
           cd "$APK_DIR_PATH"
+          echo "=== Файлы в APK_DIR_PATH ==="
+          ls -la
+          echo "=== APK_BASENAME_PREFIX=$APK_BASENAME_PREFIX ==="
+          echo "=== RELEASE_VERSION_NAME=$RELEASE_VERSION_NAME ==="
           for abi in universal arm64-v8a armeabi-v7a x86_64 x86; do
             OLD_NAME="${APK_BASENAME_PREFIX}_$abi.apk"
             if [ -f "$OLD_NAME" ]; then
-              NEW_NAME="Termux-RasNikGal-${RELEASE_VERSION_NAME/v/}-$abi.apk"
+              NEW_NAME="Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-$abi.apk"
               mv "$OLD_NAME" "$NEW_NAME"
             fi
           done
