@@ -39,6 +39,30 @@ class TermuxPreferencesDataStore extends PreferenceDataStore {
         mPreferences = TermuxAppSharedPreferences.build(context, true);
     }
 
+    @Override
+    public void putBoolean(String key, boolean value) {
+        if (mPreferences == null) return;
+        if (key == null) return;
+        switch (key) {
+            case "volume_keys_behaviour":
+                mPreferences.setVirtualVolumeKeysDisabled(!value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean getBoolean(String key, boolean defValue) {
+        if (mPreferences == null) return false;
+        switch (key) {
+            case "volume_keys_behaviour":
+                return !mPreferences.areVirtualVolumeKeysDisabled();
+            default:
+                return false;
+        }
+    }
+
     public static synchronized TermuxPreferencesDataStore getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new TermuxPreferencesDataStore(context);

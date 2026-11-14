@@ -14,6 +14,9 @@ import com.termux.shared.logger.Logger;
 import com.termux.shared.data.DataUtils;
 import com.termux.shared.termux.TermuxUtils;
 import com.termux.shared.termux.settings.preferences.TermuxPreferenceConstants.TERMUX_APP;
+import com.termux.shared.errors.Error;
+import com.termux.shared.file.FileUtils;
+import com.termux.shared.termux.settings.properties.TermuxPropertyConstants;
 
 public class TermuxAppSharedPreferences extends AppSharedPreferences {
 
@@ -110,7 +113,44 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
         SharedPreferenceUtils.setBoolean(mSharedPreferences, TERMUX_APP.KEY_SOFT_KEYBOARD_ENABLED_ONLY_IF_NO_HARDWARE, value, false);
     }
 
+    public void setVirtualVolumeKeysDisabled(boolean value) {
+        String path = TermuxConstants.TERMUX_PROPERTIES_PRIMARY_FILE_PATH;
+        String newValue = value ? "volume" : "virtual";
+        StringBuilder sb = new StringBuilder();
+        Error error = FileUtils.readTextFromFile(null, path, null, sb, true);
+        if (error != null) {
+            Logger.logError(LOG_TAG, "Failed to read properties: " + error.getMessage());
+            return;
+        }
+        String content = sb.toString();
+        String regex = "(?m)^\\s*#?\\s*volume-keys\\s*=.*$";
+        String replacement = "volume-keys = " + newValue;
+        if (content.matches("(?s).*" + regex + ".*")) {
+            content = content.replaceAll(regex, replacement);
+        } else {
+            if (!content.endsWith("\n")) content += "\n";
+            content += replacement + "\n";
+        }
+        error = FileUtils.writeTextToFile(null, path, null, content, false);
+        if (error != null) {
+            Logger.logError(LOG_TAG, "Failed to write properties: " + error.getMessage());
+        }
+    }
 
+
+
+    public boolean areVirtualVolumeKeysDisabled() {
+        String path = TermuxConstants.TERMUX_PROPERTIES_PRIMARY_FILE_PATH;
+        StringBuilder sb = new StringBuilder();
+        Error error = FileUtils.readTextFromFile(null, path, null, sb, true);
+        if (error != null) return false;
+        String content = sb.toString();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?m)^\\s*volume-keys\\s*=\\s*(\\S+)").matcher(content);
+        if (m.find()) {
+            return "volume".equals(m.group(1).trim());
+        }
+        return false;
+    }
 
     public boolean shouldKeepScreenOn() {
         return SharedPreferenceUtils.getBoolean(mSharedPreferences, TERMUX_APP.KEY_KEEP_SCREEN_ON, TERMUX_APP.DEFAULT_VALUE_KEEP_SCREEN_ON);

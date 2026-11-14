@@ -15,4 +15,11 @@
         app:summary="@string/termux_terminal_view_preferences_summary"
         app:fragment="com.termux.app.fragments.settings.termux.TerminalViewPreferencesFragment"/>
 
+
+    <SwitchPreference
+        app:key="volume_keys_behaviour"
+        app:title="Кнопки громкости = extra keys"
+        app:summary="Выключи, чтобы кнопки громкости регулировали звук"
+        app:defaultValue="true" />
+
 </PreferenceScreen>
