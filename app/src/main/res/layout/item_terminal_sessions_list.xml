@@ -18,10 +18,13 @@
 
     <ImageButton
         android:id="@+id/session_close_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="Close session"
+        android:scaleType="centerInside"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:tint="?android:attr/textColorPrimary" />
 
