@@ -330,7 +330,7 @@ public final class TermuxPropertyConstants {
 
     /** Defines the key for extra keys style */
     public static final String KEY_EXTRA_KEYS_STYLE =  "extra-keys-style"; // Default: "extra-keys-style"
-    public static final String DEFAULT_IVALUE_EXTRA_KEYS_STYLE = "arrows-all";
+    public static final String DEFAULT_IVALUE_EXTRA_KEYS_STYLE = "none";
 
 
 

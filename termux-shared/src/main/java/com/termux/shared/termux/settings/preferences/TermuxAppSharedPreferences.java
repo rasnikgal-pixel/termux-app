@@ -207,7 +207,7 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
         
         // Заменяем стиль на all (чтобы не было иконок)
         String styleRegex = "(?m)^\\s*#?\\s*extra-keys-style\\s*=.*$";
-        String styleReplacement = "extra-keys-style = all";
+        String styleReplacement = "extra-keys-style = none";
         if (propContent.matches("(?s).*" + styleRegex + ".*")) {
             propContent = propContent.replaceAll(styleRegex, styleReplacement);
         } else {
