@@ -1,6 +1,9 @@
 package com.termux.app.terminal.io;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 
@@ -96,6 +99,20 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
         } else if ("PASTE".equals(key)) {
             if(mTermuxTerminalSessionActivityClient != null)
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
+        } else if ("COPY_ALL".equals(key)) {
+            TerminalView terminalView = mTermuxTerminalViewClient.getActivity().getTerminalView();
+            if (terminalView != null && terminalView.mEmulator != null) {
+                String allText = terminalView.mEmulator.getScreen().getTranscriptText();
+                ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Termux", allText);
+                clipboard.setPrimaryClip(clip);
+                Logger.showToast(mActivity, "Скопировано всё (" + allText.length() + " символов)", true);
+            }
+        } else if ("CLEAR_AND_PASTE".equals(key)) {
+            if (mTermuxTerminalSessionActivityClient != null) {
+                mTermuxTerminalSessionActivityClient.getCurrentSession().write("clear\n");
+                mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
+            }
         }  else if ("SCROLL".equals(key)) {
             TerminalView terminalView = mTermuxTerminalViewClient.getActivity().getTerminalView();
             if (terminalView != null && terminalView.mEmulator != null)
