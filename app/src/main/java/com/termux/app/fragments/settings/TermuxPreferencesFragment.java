@@ -81,6 +81,15 @@ class TermuxPreferencesDataStore extends PreferenceDataStore {
             case "show_clear_paste_key":
                 mPreferences.setShowClearPasteKey(value);
                 break;
+            case "use_short_names":
+                mPreferences.setUseShortNames(value);
+                break;
+            case "show_arrows":
+                mPreferences.setShowArrows(value);
+                break;
+            case "show_tab_home_end":
+                mPreferences.setShowTabHomeEnd(value);
+                break;
             default:
                 break;
         }
@@ -98,6 +107,12 @@ class TermuxPreferencesDataStore extends PreferenceDataStore {
                 return mPreferences.isShowCopyAllKey();
             case "show_clear_paste_key":
                 return mPreferences.isShowClearPasteKey();
+            case "use_short_names":
+                return mPreferences.isUseShortNames();
+            case "show_arrows":
+                return mPreferences.isShowArrows();
+            case "show_tab_home_end":
+                return mPreferences.isShowTabHomeEnd();
             default:
                 return false;
         }

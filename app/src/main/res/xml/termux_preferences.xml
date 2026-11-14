@@ -36,4 +36,24 @@
         app:title="Показывать кнопку «Очистить и вставить» (Pst_Clr)"
         app:defaultValue="true" />
 
+
+    <SwitchPreference
+        app:key="use_short_names"
+        app:title="Сокращённые названия кнопок"
+        app:summary="PST вместо PASTE, CP_ALL вместо COPY_ALL"
+        app:defaultValue="true" />
+
+    <SwitchPreference
+        app:key="use_short_names"
+        app:title="Сокращённые названия кнопок"
+        app:summary="Pst вместо PASTE, Cp_All вместо COPY_ALL"
+        app:defaultValue="true" />
+    <SwitchPreference
+        app:key="show_arrows"
+        app:title="Показывать стрелки (UP/DOWN/LEFT/RIGHT)"
+        app:defaultValue="false" />
+    <SwitchPreference
+        app:key="show_tab_home_end"
+        app:title="Показывать TAB, HOME, END"
+        app:defaultValue="false" />
 </PreferenceScreen>

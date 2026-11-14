@@ -153,33 +153,49 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
     }
 
     public void updateExtraKeys() {
-        // Читаем текущие настройки тумблеров (по умолчанию true)
+        // Настройки видимости (по умолчанию: true для тех, что видны, false для скрытых)
         boolean showPaste = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_paste_key", true);
         boolean showCopy = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_copy_all_key", true);
         boolean showClearPaste = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_clear_paste_key", true);
+        boolean useShort = SharedPreferenceUtils.getBoolean(mSharedPreferences, "use_short_names", true);
+        
+        // Настройки для скрытых по умолчанию (стрелки, TAB, HOME, END)
+        boolean showArrows = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_arrows", false);
+        boolean showTabHomeEnd = SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_tab_home_end", false);
 
-        // Формируем первую строку
+        String p = useShort ? "Pst" : "PASTE";
+        String c = useShort ? "Cp_All" : "COPY_ALL";
+        String cl = useShort ? "Pst_Clr" : "CLEAR_AND_PASTE";
+
+        // 1-й ряд: ESC, CTRL, ALT, (стрелки), PST, MNU
         StringBuilder row1 = new StringBuilder("[");
-        row1.append("'ESC','CTRL','ALT','UP','LEFT','DOWN','RIGHT'");
-        if (showPaste) row1.append(",'Pst'");
+        row1.append("'ESC','CTRL','ALT'");
+        if (showArrows) row1.append(",'UP','DOWN','LEFT','RIGHT'");
+        if (showPaste) row1.append(",'").append(p).append("'");
         row1.append(",'Mnu']");
 
-        // Формируем вторую строку
+        // 2-й ряд: CP_ALL, PST_CLR, (TAB/HOME/END), PGUP, PGDN
         StringBuilder row2 = new StringBuilder("[");
         boolean first = true;
-        if (showCopy) { row2.append("'Cp_All'"); first = false; }
-        if (showClearPaste) { if (!first) row2.append(","); row2.append("'Pst_Clr'"); first = false; }
+        if (showCopy) { row2.append("'").append(c).append("'"); first = false; }
+        if (showClearPaste) { if (!first) row2.append(","); row2.append("'").append(cl).append("'"); first = false; }
+        if (showTabHomeEnd) { 
+            if (!first) row2.append(","); 
+            row2.append("'TAB','HOME','END'"); 
+            first = false; 
+        }
         if (!first) row2.append(",");
-        row2.append("'TAB','HOME','END','PGUP','PGDN']");
+        row2.append("'PGUP','PGDN']");
 
         String extraKeys = "[" + row1.toString() + ", " + row2.toString() + "]";
-
-        // Записываем в termux.properties
+        
         String path = TermuxConstants.TERMUX_PROPERTIES_PRIMARY_FILE_PATH;
         StringBuilder sb = new StringBuilder();
         Error error = FileUtils.readTextFromFile(null, path, null, sb, true);
         if (error != null) return;
         String propContent = sb.toString();
+        
+        // Заменяем extra-keys
         String regex = "(?m)^\\s*#?\\s*extra-keys\\s*=.*$";
         String replacement = "extra-keys = " + extraKeys;
         if (propContent.matches("(?s).*" + regex + ".*")) {
@@ -188,6 +204,17 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
             if (!propContent.endsWith("\n")) propContent += "\n";
             propContent += replacement + "\n";
         }
+        
+        // Заменяем стиль на all (чтобы не было иконок)
+        String styleRegex = "(?m)^\\s*#?\\s*extra-keys-style\\s*=.*$";
+        String styleReplacement = "extra-keys-style = all";
+        if (propContent.matches("(?s).*" + styleRegex + ".*")) {
+            propContent = propContent.replaceAll(styleRegex, styleReplacement);
+        } else {
+            if (!propContent.endsWith("\n")) propContent += "\n";
+            propContent += styleReplacement + "\n";
+        }
+        
         FileUtils.writeTextToFile(null, path, null, propContent, false);
     }
 
@@ -202,6 +229,29 @@ public class TermuxAppSharedPreferences extends AppSharedPreferences {
     public void setShowClearPasteKey(boolean value) {
         SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_clear_paste_key", value, false);
         updateExtraKeys();
+    }
+
+    public void setUseShortNames(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "use_short_names", value, false);
+        updateExtraKeys();
+    }
+    public boolean isUseShortNames() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "use_short_names", true);
+    }
+
+    public void setShowArrows(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_arrows", value, false);
+        updateExtraKeys();
+    }
+    public boolean isShowArrows() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_arrows", false);
+    }
+    public void setShowTabHomeEnd(boolean value) {
+        SharedPreferenceUtils.setBoolean(mSharedPreferences, "show_tab_home_end", value, false);
+        updateExtraKeys();
+    }
+    public boolean isShowTabHomeEnd() {
+        return SharedPreferenceUtils.getBoolean(mSharedPreferences, "show_tab_home_end", false);
     }
 
     public boolean isShowPasteKey() {
