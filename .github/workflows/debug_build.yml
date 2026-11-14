@@ -57,6 +57,7 @@ jobs:
           echo "APK_DIR_PATH=$APK_DIR_PATH" >> $GITHUB_ENV
           echo "APK_VERSION_TAG=$APK_VERSION_TAG" >> $GITHUB_ENV
           echo "APK_BASENAME_PREFIX=$APK_BASENAME_PREFIX" >> $GITHUB_ENV
+          echo "RELEASE_VERSION_NAME=${RELEASE_VERSION_NAME/v/}" >> $GITHUB_ENV
 
           echo "Building APKs for 'APK_VERSION_TAG' build"
           export TERMUX_APP_VERSION_NAME="${RELEASE_VERSION_NAME/v/}" # Used by app/build.gradle
@@ -85,50 +86,62 @@ jobs:
             exit_on_error "Generate sha25sums failed for '$APK_VERSION_TAG' release."
           fi
 
+      - name: Rename APKs
+        shell: bash {0}
+        run: |
+          cd "$APK_DIR_PATH"
+          for abi in universal arm64-v8a armeabi-v7a x86_64 x86; do
+            OLD_NAME="${APK_BASENAME_PREFIX}_$abi.apk"
+            if [ -f "$OLD_NAME" ]; then
+              NEW_NAME="Termux-RasNikGal-${RELEASE_VERSION_NAME/v/}-$abi.apk"
+              mv "$OLD_NAME" "$NEW_NAME"
+            fi
+          done
+
       - name: Attach universal APK file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_universal
+          name: Termux-RasNikGal-universal
           path: |
-            ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_universal.apk
+            ${{ env.APK_DIR_PATH }}/Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-universal.apk
             ${{ env.APK_DIR_PATH }}/output-metadata.json
 
       - name: Attach arm64-v8a APK file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_arm64-v8a
+          name: Termux-RasNikGal-arm64-v8a
           path: |
-            ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_arm64-v8a.apk
+            ${{ env.APK_DIR_PATH }}/Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-arm64-v8a.apk
             ${{ env.APK_DIR_PATH }}/output-metadata.json
 
       - name: Attach armeabi-v7a APK file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_armeabi-v7a
+          name: Termux-RasNikGal-armeabi-v7a
           path: |
-            ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_armeabi-v7a.apk
+            ${{ env.APK_DIR_PATH }}/Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-armeabi-v7a.apk
             ${{ env.APK_DIR_PATH }}/output-metadata.json
 
       - name: Attach x86_64 APK file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_x86_64
+          name: Termux-RasNikGal-x86_64
           path: |
-            ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_x86_64.apk
+            ${{ env.APK_DIR_PATH }}/Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-x86_64.apk
             ${{ env.APK_DIR_PATH }}/output-metadata.json
 
       - name: Attach x86 APK file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_x86
+          name: Termux-RasNikGal-x86
           path: |
-            ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_x86.apk
+            ${{ env.APK_DIR_PATH }}/Termux-RasNikGal-${{ env.RELEASE_VERSION_NAME }}-x86.apk
             ${{ env.APK_DIR_PATH }}/output-metadata.json
 
       - name: Attach sha256sums file
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.APK_BASENAME_PREFIX }}_sha256sums
+          name: Termux-RasNikGal-sha256sums
           path: |
             ${{ env.APK_DIR_PATH }}/${{ env.APK_BASENAME_PREFIX }}_sha256sums
             ${{ env.APK_DIR_PATH }}/output-metadata.json
