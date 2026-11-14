@@ -386,6 +386,38 @@ public final class TermuxActivity extends AppCompatActivity implements ServiceCo
             .show();
     }
 
+    public void showCommandPalette() {
+        if (getCurrentSession() == null) return;
+
+        final String[] commands = {
+            "pkg update && pkg upgrade -y",
+            "pkg install -y python",
+            "pkg install -y nodejs-lts",
+            "pkg install -y git",
+            "git status",
+            "git push",
+            "clear"
+        };
+        final String[] titles = {
+            "🔄 Обновить систему",
+            "🐍 Установить Python",
+            "📦 Установить Node.js",
+            "🛠 Установить Git",
+            "📊 Git Status",
+            "📤 Git Push",
+            "🧹 Очистить экран"
+        };
+
+        new AlertDialog.Builder(this)
+            .setTitle("Быстрые команды")
+            .setItems(titles, (dialog, which) -> {
+                String cmd = commands[which];
+                getCurrentSession().write(cmd + "\n");
+            })
+            .setNegativeButton("Отмена", null)
+            .show();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();

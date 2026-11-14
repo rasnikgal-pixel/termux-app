@@ -96,6 +96,8 @@ public class TermuxTerminalExtraKeys extends TerminalExtraKeys {
                 drawerLayout.closeDrawer(Gravity.LEFT);
             else
                 drawerLayout.openDrawer(Gravity.LEFT);
+        } else if ("MENU".equals(key)) {
+            mActivity.showCommandPalette();
         } else if ("PASTE".equals(key)) {
             if(mTermuxTerminalSessionActivityClient != null)
                 mTermuxTerminalSessionActivityClient.onPasteTextFromClipboard(null);
