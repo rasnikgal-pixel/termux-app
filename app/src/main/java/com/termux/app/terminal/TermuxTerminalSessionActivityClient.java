@@ -176,11 +176,9 @@ public class TermuxTerminalSessionActivityClient extends TermuxTerminalSessionCl
                 removeFinishedSession(finishedSession);
             }
         } else {
-            // Once we have a separate launcher icon for the failsafe session, it
-            // should be safe to auto-close session on exit code '0' or '130'.
-            if (finishedSession.getExitStatus() == 0 || finishedSession.getExitStatus() == 130 || isPluginExecutionCommandWithPendingResult) {
-                removeFinishedSession(finishedSession);
-            }
+            // Always close the session, even if exit status is not 0 or 130.
+            // This prevents the "press Enter" prompt after SIGKILL (signal 9).
+            removeFinishedSession(finishedSession);
         }
     }
 
